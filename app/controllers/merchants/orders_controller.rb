@@ -9,5 +9,6 @@ class Merchants::OrdersController < Merchants::BaseController
   def index
     @user = current_user
     @orders = @user.pending_orders
+    @placeholder_image_items = @user.placeholder_image_items
   end
 end
