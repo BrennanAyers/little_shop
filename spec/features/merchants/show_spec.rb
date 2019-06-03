@@ -74,5 +74,38 @@ RSpec.describe 'Merchant show page', type: :feature do
         expect(page).to have_content("Item Id: #{@item_4.id}")
       end
     end
+
+    describe 'To Do List' do
+      before :each do
+        @merchant = create(:user, role: 1)
+        @item_1 = create(:item, user: @merchant)
+        @item_2 = create(:item, user: @merchant)
+        @item_3 = create(:item, user: @merchant)
+        @item_4 = create(:item, user: @merchant)
+        @item_5 = Item.create!(name: "TestCheese", active: true, price: 10.00, description: "This cheese should have the default image.", image: "", inventory: 100)
+        @user_1 = create(:user)
+        @user_2 = create(:user)
+        @user_3 = create(:user)
+        @order_1 = create(:order, user: @user_1, status: 1)
+        @order_2 = create(:order, user: @user_2, status: 1)
+        @order_3 = create(:order, user: @user_3, status: 0)
+        @order_4 = create(:order, user: @user_3, status: 0)
+        OrderItem.create!(item: @item_1, order: @order_1, quantity: 12, price: 1.99, fulfilled: true)
+        OrderItem.create!(item: @item_2, order: @order_2, quantity: 13, price: 1.99, fulfilled: false)
+        OrderItem.create!(item: @item_3, order: @order_3, quantity: 14, price: 1.99, fulfilled: true)
+        OrderItem.create!(item: @item_3, order: @order_4, quantity: 15, price: 1.99, fulfilled: false)
+
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
+      end
+
+      it 'should tell me about placeholder images for cheeses I own' do
+        visit dashboard_path
+
+        within("#to-do-list") do
+          expect(page).to have_content("#{@item_5.name} is currently using the default cheesey image, please fix this!")
+          expect(page).to have_link(@item_5.name, href: edit_dashboard_item_path(@item_5))
+        end
+      end
+    end
   end
 end
