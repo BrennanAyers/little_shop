@@ -93,6 +93,10 @@ class User < ApplicationRecord
           distinct(:orders)
   end
 
+  def placeholder_image_items
+    items.where("items.image = 'https://kaaskraam.com/wp-content/uploads/2018/02/Gouda-Belegen.jpg'")
+  end
+
   def self.top_3_merchants_by_sales
     self.joins(items: :order_items)
         .joins('JOIN orders ON order_items.order_id=orders.id')
