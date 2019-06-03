@@ -341,5 +341,13 @@ RSpec.describe User, type: :model do
       expect(@merchant.top_users[1].name).to eq(@user_4.name)
       expect(@merchant.top_users[2].name).to eq(@user_5.name)
     end
+
+    it '#placeholder_image_items' do
+      expect(@merchant.placeholder_image_items.count).to eq(4)
+      expect(@merchant.placeholder_image_items.first).to eq(@item_1)
+      expect(@merchant.placeholder_image_items.second).to eq(@item_2)
+      expect(@merchant.placeholder_image_items.third).to eq(@item_3)
+      expect(@merchant.placeholder_image_items.fourth).to eq(@item_4)
+    end
   end
 end
