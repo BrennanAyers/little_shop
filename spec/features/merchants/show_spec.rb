@@ -78,11 +78,11 @@ RSpec.describe 'Merchant show page', type: :feature do
     describe 'To Do List' do
       before :each do
         @merchant = create(:user, role: 1)
-        @item_1 = create(:item, user: @merchant)
-        @item_2 = create(:item, user: @merchant)
-        @item_3 = create(:item, user: @merchant)
-        @item_4 = create(:item, user: @merchant)
-        @item_5 = Item.create!(name: "TestCheese", active: true, price: 10.00, description: "This cheese should have the default image.", image: "", inventory: 100)
+        @item_1 = create(:item, user: @merchant, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
+        @item_2 = create(:item, user: @merchant, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
+        @item_3 = create(:item, user: @merchant, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
+        @item_4 = create(:item, user: @merchant, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
+
         @user_1 = create(:user)
         @user_2 = create(:user)
         @user_3 = create(:user)
@@ -99,9 +99,12 @@ RSpec.describe 'Merchant show page', type: :feature do
       end
 
       it 'should tell me about placeholder images for cheeses I own' do
+        @item_5 = Item.create!(name: "TestCheese", active: true, price: 10.00, description: "This cheese should have the default image.", image: "https://kaaskraam.com/wp-content/uploads/2018/02/Gouda-Belegen.jpg", inventory: 100, user: @merchant)
         visit dashboard_path
 
         within("#placeholder-images-list") do
+          expect(page).to have_content("These items need new images!")
+
           expect(page).to have_content("#{@item_5.name} is currently using the default cheesey image, please fix this!")
           expect(page).to have_link(@item_5.name, href: edit_dashboard_item_path(@item_5))
         end
