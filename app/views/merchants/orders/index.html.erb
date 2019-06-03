@@ -29,6 +29,17 @@
         </span>
       <% end %>
     </div>
+
+    <div class="card-body">
+      <% unless @unfulfilled_items.empty? %>
+        <span id="unfulfilled-items">
+          <h5 class="card-title">Unfulfilled Items</h5>
+          <p class="card-text">
+            You have <%= @unfulfilled_items.count %> unfulfilled orders worth <%= number_to_currency(@unfulfilled_items_cost) %>
+          </p>
+        </span>
+      <% end %>
+    </div>
   </section>
 <% end %>
 
