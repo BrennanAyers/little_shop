@@ -101,7 +101,7 @@ RSpec.describe 'Merchant show page', type: :feature do
       it 'should tell me about placeholder images for cheeses I own' do
         visit dashboard_path
 
-        within("#to-do-list") do
+        within("#placeholder-images-list") do
           expect(page).to have_content("#{@item_5.name} is currently using the default cheesey image, please fix this!")
           expect(page).to have_link(@item_5.name, href: edit_dashboard_item_path(@item_5))
         end
