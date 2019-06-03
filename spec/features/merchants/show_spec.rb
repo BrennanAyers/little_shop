@@ -90,10 +90,10 @@ RSpec.describe 'Merchant show page', type: :feature do
         @order_2 = create(:order, user: @user_2, status: 1)
         @order_3 = create(:order, user: @user_3, status: 0)
         @order_4 = create(:order, user: @user_3, status: 0)
-        OrderItem.create!(item: @item_1, order: @order_1, quantity: 12, price: 1.99, fulfilled: true)
-        OrderItem.create!(item: @item_2, order: @order_2, quantity: 13, price: 1.99, fulfilled: false)
-        OrderItem.create!(item: @item_3, order: @order_3, quantity: 14, price: 1.99, fulfilled: true)
-        OrderItem.create!(item: @item_3, order: @order_4, quantity: 15, price: 1.99, fulfilled: false)
+        @order_item_1 = OrderItem.create!(item: @item_1, order: @order_1, quantity: 12, price: 1.99, fulfilled: true)
+        @order_item_2 = OrderItem.create!(item: @item_2, order: @order_2, quantity: 13, price: 1.99, fulfilled: false)
+        @order_item_3 = OrderItem.create!(item: @item_3, order: @order_3, quantity: 14, price: 1.99, fulfilled: true)
+        @order_item_4 = OrderItem.create!(item: @item_3, order: @order_4, quantity: 15, price: 1.99, fulfilled: false)
 
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
       end
@@ -107,6 +107,16 @@ RSpec.describe 'Merchant show page', type: :feature do
 
           expect(page).to have_content("#{@item_5.name} is currently using the default cheesey image, please fix this!")
           expect(page).to have_link(@item_5.name, href: edit_dashboard_item_path(@item_5))
+        end
+      end
+
+      it 'should tell me about my unfulfilled items and how much they are worth' do
+        visit dashboard_path
+
+        within("#unfulfilled-items") do
+          expect(page).to have_content("Unfulfilled Items")
+
+          expect(page).to have_content("You have 2 unfulfilled orders worth #{number_to_currency((@order_item_2.price * @order_item_2.quantity) + (@order_item_4.price * @order_item_4.quantity))}")
         end
       end
     end
