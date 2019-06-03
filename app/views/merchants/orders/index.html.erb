@@ -10,6 +10,26 @@
 <p>State: <%= @user.state %></p>
 <p>Zip Code: <%= @user.zip %></p>
 
+<section id="to-do-list">
+  <div class="card-header">
+    To Do List
+  </div>
+  <div class="card-body">
+    <% unless @placeholder_image_items.count.empty? %>
+      <span id="placeholder-images-list">
+        <h5 class="card-title">These items need new images!</h5>
+        <p class="card-text">
+          <ol>
+            <% @placeholder_image_items.each do |item| %>
+              <li><strong><%= link_to item.name, edit_dashboard_item_path(item) %></strong> is currently using the default cheesey image, please fix this!</li>
+            <% end %>
+          </ol>
+        </p>
+      </span>
+    <% end %>
+  </div>
+</section>
+
 <% if !@user.items.empty? && !@user.top_items_sold(5).empty?  %>
 
 <div class="card merchant-stats" >
@@ -63,7 +83,7 @@
       <h5 class="card-title">Top Customer by Orders Shipped</h5>
       <p class="card-text">
           <% @user.best_customer_orders.each do |order| %>
-            <strong><%= order.user.name %>:</strong> <%= order.order_count %>, Orders Shipped </li>
+            <li> <strong><%= order.user.name %>:</strong> <%= order.order_count %>, Orders Shipped </li>
           <% end %>
       </p>
     </span>
@@ -72,7 +92,7 @@
       <h5 class="card-title">Top Customer by Items Shipped</h5>
       <p class="card-text">
           <% @user.best_customer_items.each do |order| %>
-            <strong><%= order.name %>:</strong> <%= order.total_bought %>, Items Shipped </li>
+            <li> <strong><%= order.name %>:</strong> <%= order.total_bought %>, Items Shipped </li>
           <% end %>
       </p>
     </span>
