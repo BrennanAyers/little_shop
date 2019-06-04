@@ -30,6 +30,7 @@ RSpec.describe 'New user form' do
         expect(current_path).to eq("/profile")
 
         expect(page).to have_content("#{new_user.name}")
+        expect(page).to have_content("Address Nickname: Home")
         expect(page).to have_content("Address: #{new_user.addresses.first.address}")
         expect(page).to have_content("City: #{new_user.addresses.first.city}")
         expect(page).to have_content("Zip Code: #{new_user.addresses.first.zip}")
