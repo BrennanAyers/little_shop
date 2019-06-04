@@ -3,11 +3,14 @@ require 'rails_helper'
 RSpec.describe 'As a Default User', type: :feature do
   describe 'From my Profile page' do
     before :each do
-      @user = User.create!(email: "test@test.com", password_digest: "t3s7", role: 0, active: true, name: "Testy McTesterson")
-      @user.addresses << create(:address, address: "123 Test St", city: "Testville", state: "Test", zip: "01234", user: @user)
+      @user = User.create!(email: "test@test.com", password: "t3s7", role: 0, active: true, name: "Testy McTesterson")
+      @user.addresses << create(:address, address: "123 Test St", city: "Testville", state: "Testington", zip: "01234", user: @user)
       @address = @user.addresses.first
 
-      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
+      visit login_path
+      fill_in "Email", with: @user.email
+      fill_in "Password", with: @user.password
+      click_button "Login"
     end
 
     it 'I can delete an address' do
@@ -20,7 +23,7 @@ RSpec.describe 'As a Default User', type: :feature do
 
       expect(page).to have_link("Delete #{@address.nickname} Address", href: address_path(@address))
 
-      click_link "Delete Home Address"
+      click_link "Delete #{@address.nickname} Address"
 
       expect(current_path).to eq(profile_path)
       expect(page).to_not have_content(@address.address)
