@@ -138,6 +138,21 @@ RSpec.describe 'Merchant show page', type: :feature do
           expect(page).to have_content("You have #{@merchant.unfulfilled_items.count} unfulfilled orders worth #{number_to_currency((@order_item_2.price * @order_item_2.quantity) + (@order_item_1.price * @order_item_1.quantity) + (@order_item_5.price * @order_item_5.quantity))}")
         end
       end
+
+      it 'should tell me about I have fulfilled all my items' do
+        @order_item_1.update(fulfilled: true)
+        @order_item_2.update(fulfilled: true)
+        @order_item_2.reload
+        @order_item_2.reload
+        @order_item_5 = OrderItem.create!(item: @item_3, order: @order_1, quantity: 15, price: 1.99, fulfilled: true)
+        visit dashboard_path
+
+        within("#unfulfilled-items") do
+          expect(page).to have_content("All of your items are fulfilled!")
+
+          expect(page).to_not have_content("You have #{@merchant.unfulfilled_items.count} unfulfilled orders worth #{number_to_currency((@order_item_2.price * @order_item_2.quantity) + (@order_item_1.price * @order_item_1.quantity) + (@order_item_5.price * @order_item_5.quantity))}")
+        end
+      end
     end
   end
 end
