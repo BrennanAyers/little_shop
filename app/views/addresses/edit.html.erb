@@ -1,6 +1,10 @@
 <h2>Edit <%= @address.nickname %></h2>
 
-<%= form_for @address, url: edit_address_path do |f| %>
+<% @address.errors.full_messages.each do |msg| %>
+  <%= msg %>
+<% end %>
+
+<%= form_for @address, url: address_path do |f| %>
 
   <%= f.label :nickname %>
   <%= f.text_field :nickname %>
