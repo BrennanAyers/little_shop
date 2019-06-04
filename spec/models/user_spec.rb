@@ -264,6 +264,13 @@ RSpec.describe User, type: :model do
       # require "pry"; binding.pry
       expect(@merchant.unfulfilled_items_cost).to eq((@order_item_1.price * @order_item_1.quantity) + (@order_item_2.price * @order_item_2.quantity))
     end
+
+    it '#items_exceeding_inventory' do
+      @order_item_2.update(quantity: 200)
+      @order_item_2.reload
+
+      expect(@merchant.items_exceeding_inventory).to eq([@item_2])
+    end
   end
 
   describe 'instance_methods_us36' do
