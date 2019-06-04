@@ -114,6 +114,20 @@ RSpec.describe 'Merchant show page', type: :feature do
         end
       end
 
+      it 'should tell me that all my items do not have placeholder images' do
+        visit dashboard_path
+
+        within("#placeholder-images-list") do
+          expect(page).to have_content("All of your items have new images!")
+
+          expect(page).to_not have_content("#{@item_1.name} is currently using the default cheesey image, please fix this!")
+          expect(page).to_not have_link(@item_1.name, href: edit_dashboard_item_path(@item_1))
+
+          expect(page).to_not have_content("#{@item_4.name} is currently using the default cheesey image, please fix this!")
+          expect(page).to_not have_link(@item_4.name, href: edit_dashboard_item_path(@item_4))
+        end
+      end
+
       it 'should tell me about my unfulfilled items and how much they are worth' do
         @order_item_5 = OrderItem.create!(item: @item_3, order: @order_1, quantity: 15, price: 1.99, fulfilled: false)
         visit dashboard_path
