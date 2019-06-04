@@ -93,6 +93,26 @@ class User < ApplicationRecord
           distinct(:orders)
   end
 
+  ## EXTENSIONS
+
+  def placeholder_image_items
+    items.where("items.image = 'https://kaaskraam.com/wp-content/uploads/2018/02/Gouda-Belegen.jpg'")
+  end
+
+  def unfulfilled_items
+    pending_orders.where("order_items.fulfilled = false")
+                  .select("order_items.*")
+  end
+
+  def unfulfilled_items_cost
+    pending_orders.where("order_items.fulfilled = false")
+                  .select("order_items.*")
+                  .distinct(false)
+                  .sum("order_items.quantity * order_items.price")
+  end
+
+  ## END EXTENSIONS
+
   def self.top_3_merchants_by_sales
     self.joins(items: :order_items)
         .joins('JOIN orders ON order_items.order_id=orders.id')
