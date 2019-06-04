@@ -21,9 +21,9 @@ Rails.application.routes.draw do
   patch '/profile/edit', to: 'default/users#update'
   scope module: :default, path: :profile do
     resources :orders, only: [:create, :show, :index, :destroy], as: :profile_orders
+    resources :addresses, only: [:new, :create, :edit, :update, :destroy]
   end
 
-  resources :addresses, only: [:new, :create, :edit, :update, :destroy]
 
   get '/merchants', to: 'merchants#index'
 

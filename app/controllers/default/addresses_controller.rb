@@ -1,6 +1,11 @@
-class AddressesController < ApplicationController
+class Default::AddressesController < ApplicationController
   def new
+    # require "pry"; binding.pry
     @address = Address.new
+  end
+
+  def create
+    # require "pry"; binding.pry
   end
 
   def edit
