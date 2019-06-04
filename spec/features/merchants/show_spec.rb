@@ -106,6 +106,9 @@ RSpec.describe 'Merchant show page', type: :feature do
         within("#placeholder-images-list") do
           expect(page).to have_content("These items need new images!")
 
+          expect(page).to_not have_content("#{@item_1.name} is currently using the default cheesey image, please fix this!")
+          expect(page).to_not have_link(@item_1.name, href: edit_dashboard_item_path(@item_1))
+
           expect(page).to have_content("#{@item_5.name} is currently using the default cheesey image, please fix this!")
           expect(page).to have_link(@item_5.name, href: edit_dashboard_item_path(@item_5))
         end
