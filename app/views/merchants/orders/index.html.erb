@@ -16,7 +16,11 @@
       To Do List
     </div>
     <div class="card-body">
-      <% unless @placeholder_image_items.empty? %>
+      <% if @placeholder_image_items.empty? %>
+      <span id="placeholder-images-list">
+        <h5 class="card-title">All of your items have new images!</h5>
+      </span>
+      <% else %>
         <span id="placeholder-images-list">
           <h5 class="card-title">These items need new images!</h5>
           <p class="card-text">
