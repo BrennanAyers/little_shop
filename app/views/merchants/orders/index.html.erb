@@ -16,33 +16,33 @@
       To Do List
     </div>
     <div class="card-body">
-      <% if @placeholder_image_items.empty? %>
       <span id="placeholder-images-list">
-        <h5 class="card-title">All of your items have new images!</h5>
+        <% if @placeholder_image_items.empty? %>
+          <h5 class="card-title">All of your items have new images!</h5>
+        <% else %>
+            <h5 class="card-title">These items need new images!</h5>
+            <p class="card-text">
+              <ol>
+                <% @placeholder_image_items.each do |item| %>
+                  <li><strong><%= link_to item.name, edit_dashboard_item_path(item) %></strong> is currently using the default cheesey image, please fix this!</li>
+                <% end %>
+              </ol>
+            </p>
+        <% end %>
       </span>
-      <% else %>
-        <span id="placeholder-images-list">
-          <h5 class="card-title">These items need new images!</h5>
-          <p class="card-text">
-            <ol>
-              <% @placeholder_image_items.each do |item| %>
-                <li><strong><%= link_to item.name, edit_dashboard_item_path(item) %></strong> is currently using the default cheesey image, please fix this!</li>
-              <% end %>
-            </ol>
-          </p>
-        </span>
-      <% end %>
     </div>
 
     <div class="card-body">
-      <% unless @unfulfilled_items.empty? %>
-        <span id="unfulfilled-items">
-          <h5 class="card-title">Unfulfilled Items</h5>
-          <p class="card-text">
-            You have <%= @unfulfilled_items.count %> unfulfilled orders worth <%= number_to_currency(@unfulfilled_items_cost) %>
-          </p>
-        </span>
-      <% end %>
+      <span id="unfulfilled-items">
+        <% if @unfulfilled_items.empty? %>
+          <h5 class="card-title">All of your items are fulfilled!</h5>
+        <% else %>
+            <h5 class="card-title">Unfulfilled Items</h5>
+            <p class="card-text">
+              You have <%= @unfulfilled_items.count %> unfulfilled orders worth <%= number_to_currency(@unfulfilled_items_cost) %>
+            </p>
+        <% end %>
+      </span>
     </div>
   </section>
 <% end %>
