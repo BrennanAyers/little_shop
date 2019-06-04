@@ -4,7 +4,8 @@ RSpec.describe 'User show page', type: :feature do
   context 'As a regular user' do
     describe 'When I visit my own profile page' do
       before :each do
-        @user = User.create!(email: "test@test.com", password_digest: "t3s7", role: 0, active: true, name: "Testy McTesterson", address: "123 Test St", city: "Testville", state: "Test", zip: "01234")
+        @user = User.create!(email: "test@test.com", password_digest: "t3s7", role: 0, active: true, name: "Testy McTesterson")
+        @user.addresses << create(:address, address: "123 Test St", city: "Testville", state: "Test", zip: "01234", user: @user)
 
         allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
       end
@@ -16,10 +17,10 @@ RSpec.describe 'User show page', type: :feature do
         expect(page).to have_content(@user.role)
         expect(page).to have_content(@user.active)
         expect(page).to have_content(@user.name)
-        expect(page).to have_content(@user.address)
-        expect(page).to have_content(@user.city)
-        expect(page).to have_content(@user.state)
-        expect(page).to have_content(@user.zip)
+        expect(page).to have_content(@user.addresses.first.address)
+        expect(page).to have_content(@user.addresses.first.city)
+        expect(page).to have_content(@user.addresses.first.state)
+        expect(page).to have_content(@user.addresses.first.zip)
 
         expect(page).to_not have_content(@user.password_digest)
       end
@@ -32,6 +33,12 @@ RSpec.describe 'User show page', type: :feature do
         click_on "Edit Profile"
 
         expect(current_path).to eq("/profile/edit")
+      end
+
+      it 'I see a link to edit my Home address' do
+        visit profile_path
+
+        expect(page).to have_link(@user.addresses.first.nickname, href: address_edit_path(@user.addresses.first))
       end
 
       describe 'And I have orders placed in the system' do
