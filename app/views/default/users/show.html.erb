@@ -7,6 +7,7 @@
 <p>Active: <%= @user.active %></p>
 <% @user.addresses.each do |address| %>
   <section id="address-<%= address.id %>">
+    <p>Address Nickname: <%= address.nickname %></p>
     <p>Address: <%= address.address %></p>
     <p>City: <%= address.city %></p>
     <p>State: <%= address.state %></p>
