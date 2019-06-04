@@ -12,10 +12,12 @@ RSpec.describe 'New user form' do
         visit register_path
 
         fill_in 'Name', with: 'User'
-        fill_in 'Address', with: '1111 South One St.'
-        fill_in 'City', with: 'Denver'
-        fill_in 'State', with: 'CO'
-        fill_in 'Zip', with: '80000'
+        within "#addresses" do
+          fill_in 'Address', with: '1111 South One St.'
+          fill_in 'City', with: 'Denver'
+          fill_in 'State', with: 'CO'
+          fill_in 'Zip', with: '80000'
+        end
         fill_in 'Email', with: 'user@gmail.com'
         fill_in 'Password', with: 'password'
         fill_in 'Confirm password', with: 'password'
@@ -38,10 +40,12 @@ RSpec.describe 'New user form' do
         visit register_path
 
         fill_in 'Name', with: 'User'
-        fill_in 'Address', with: '1111 South One St.'
-        fill_in 'City', with: 'Denver'
-        fill_in 'State', with: 'CO'
-        fill_in 'Zip', with: '80000'
+        within "#addresses" do
+          fill_in 'Address', with: '1111 South One St.'
+          fill_in 'City', with: 'Denver'
+          fill_in 'State', with: 'CO'
+          fill_in 'Zip', with: '80000'
+        end
         fill_in 'Email', with: 'user@gmail.com'
         fill_in 'Password', with: 'password'
         fill_in 'Confirm password', with: 'password3'
@@ -60,10 +64,12 @@ RSpec.describe 'New user form' do
         visit register_path
 
         fill_in 'Name', with: 'User_2'
-        fill_in 'Address', with: '1111 South One St.'
-        fill_in 'City', with: 'Denver'
-        fill_in 'State', with: 'CO'
-        fill_in 'Zip', with: '80000'
+        within "#addresses" do
+          fill_in 'Address', with: '1111 South One St.'
+          fill_in 'City', with: 'Denver'
+          fill_in 'State', with: 'CO'
+          fill_in 'Zip', with: '80000'
+        end
         fill_in 'Email', with: 'user_1@gmail.com'
         fill_in 'Password', with: 'password'
         fill_in 'Confirm password', with: 'password'
@@ -80,10 +86,12 @@ RSpec.describe 'New user form' do
       visit register_path
 
       fill_in 'Name', with: ''
-      fill_in 'Address', with: '1111 South One St.'
-      fill_in 'City', with: 'Denver'
-      fill_in 'State', with: ''
-      fill_in 'Zip', with: '80000'
+      within "#addresses" do
+        fill_in 'Address', with: '1111 South One St.'
+        fill_in 'City', with: 'Denver'
+        fill_in 'State', with: ''
+        fill_in 'Zip', with: '80000'
+      end
       fill_in 'Email', with: 'user_1@gmail.com'
       fill_in 'Password', with: ''
       fill_in 'Confirm password', with: ''
