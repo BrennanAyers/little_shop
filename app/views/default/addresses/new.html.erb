@@ -1,6 +1,6 @@
 <h2>New Address</h2>
 
-<%= form_for [@address] do |f| %>
+<%= form_for [@user, @address], url: profile_addresses_path do |f| %>
 
   <%= f.label :nickname %>
   <%= f.text_field :nickname %>

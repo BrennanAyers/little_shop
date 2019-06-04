@@ -11,7 +11,7 @@ RSpec.describe 'As a Default user', type: :feature do
     end
 
     it 'should have a form to edit' do
-      visit edit_address_path(@address)
+      visit edit_profile_address_path(@address)
 
       expect(page).to have_field("Nickname", with: "Home")
       expect(page).to have_field("Address", with: "123 Test St")
@@ -22,7 +22,7 @@ RSpec.describe 'As a Default user', type: :feature do
     end
 
     it 'should allow me to edit my address' do
-      visit edit_address_path(@address)
+      visit edit_profile_address_path(@address)
 
       fill_in "Nickname", with: "Away"
       fill_in "Address", with: "666 Fire Rd"

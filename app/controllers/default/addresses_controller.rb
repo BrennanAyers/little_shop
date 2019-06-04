@@ -1,6 +1,6 @@
 class Default::AddressesController < ApplicationController
   def new
-    # require "pry"; binding.pry
+    @user = current_user
     @address = Address.new
   end
 

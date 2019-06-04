@@ -21,7 +21,7 @@ RSpec.describe 'As a Default User', type: :feature do
       expect(page).to have_content(@address.state)
       expect(page).to have_content(@address.zip)
 
-      expect(page).to have_link("Delete #{@address.nickname} Address", href: address_path(@address))
+      expect(page).to have_link("Delete #{@address.nickname} Address", href: profile_address_path(@address))
 
       click_link "Delete #{@address.nickname} Address"
 

@@ -16,11 +16,11 @@ RSpec.describe 'As a Default User', type: :feature do
     it 'I can get a form for a new address for myself' do
       visit profile_path
 
-      expect(page).to have_link("New Address", href: new_address_path)
+      expect(page).to have_link("New Address", href: new_profile_address_path)
 
       click_link "New Address"
 
-      expect(current_path).to eq(new_address)
+      expect(current_path).to eq(new_profile_address_path)
 
       expect(page).to have_field("Nickname")
       expect(page).to have_field("Address")

@@ -4,7 +4,7 @@
   <%= msg %>
 <% end %>
 
-<%= form_for @address, url: address_path do |f| %>
+<%= form_for @address, url: profile_address_path do |f| %>
 
   <%= f.label :nickname %>
   <%= f.text_field :nickname %>

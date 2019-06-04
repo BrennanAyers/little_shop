@@ -7,15 +7,15 @@
 <p>Active: <%= @user.active %></p>
 <% @user.addresses.each do |address| %>
   <section id="address-<%= address.id %>">
-    <p>Address Nickname: <%= link_to address.nickname, edit_address_path(address) %></p>
+    <p>Address Nickname: <%= link_to address.nickname, edit_profile_address_path(address) %></p>
     <p>Address: <%= address.address %></p>
     <p>City: <%= address.city %></p>
     <p>State: <%= address.state %></p>
     <p>Zip Code: <%= address.zip %></p>
-    <%= link_to "Delete #{address.nickname} Address", address_path(address), method: :delete %>
+    <%= link_to "Delete #{address.nickname} Address", profile_address_path(address), method: :delete %>
   </section>
 <% end %>
-<%= link_to "New Address", new_address_path %>
+<%= link_to "New Address", new_profile_address_path %>
 
 <%= link_to "Edit Profile", profile_edit_path %>
 
