@@ -13,6 +13,13 @@ class AddressesController < ApplicationController
     end
   end
 
+  def destroy
+    @address = Address.destroy(params[:id])
+
+    flash[:notice] = "#{@address.nickname} Address was deleted."
+    redirect_to profile_path
+  end
+
   private
 
   def address_params
