@@ -23,7 +23,7 @@ Rails.application.routes.draw do
     resources :orders, only: [:create, :show, :index, :destroy], as: :profile_orders
   end
 
-  resources :addresses, only: [:edit]
+  resources :addresses, only: [:edit, :update]
 
   get '/merchants', to: 'merchants#index'
 
