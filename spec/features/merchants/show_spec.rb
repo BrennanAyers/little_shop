@@ -79,10 +79,10 @@ RSpec.describe 'Merchant show page', type: :feature do
     describe 'To Do List' do
       before :each do
         @merchant = create(:user, role: 1)
-        @item_1 = create(:item, user: @merchant, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
-        @item_2 = create(:item, user: @merchant, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
-        @item_3 = create(:item, user: @merchant, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
-        @item_4 = create(:item, user: @merchant, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
+        @item_1 = create(:item, user: @merchant, inventory: 12, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
+        @item_2 = create(:item, user: @merchant, inventory: 12, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
+        @item_3 = create(:item, user: @merchant, inventory: 12, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
+        @item_4 = create(:item, user: @merchant, inventory: 12, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
 
         @user_1 = create(:user)
         @user_2 = create(:user)
@@ -152,6 +152,40 @@ RSpec.describe 'Merchant show page', type: :feature do
 
           expect(page).to_not have_content("You have #{@merchant.unfulfilled_items.count} unfulfilled orders worth #{number_to_currency((@order_item_2.price * @order_item_2.quantity) + (@order_item_1.price * @order_item_1.quantity) + (@order_item_5.price * @order_item_5.quantity))}")
         end
+      end
+
+      it 'should warn me whenever an individual order has an item exceeding my inventory of that item' do
+        visit dashboard_path
+
+        within("#order-#{@order_1.id}") do
+          expect(page).to_not have_content("This order has an item that exceeds your current inventory!")
+        end
+
+        within("#order-#{@order_2.id}") do
+          expect(page).to have_content("This order has an item that exceeds your current inventory!")
+        end
+      end
+
+      it 'should warn me if multiple orders have an item exceeding my inventory of that item' do
+        @order_item_1.update(quantity: 7)
+        @order_item_2.update(quantity: 2)
+        @order_item_1.reload
+        @order_item_2.reload
+        @order_item_5 = OrderItem.create!(item: @item_1, order: @order_2, quantity: 7, price: 1.99, fulfilled: false)
+        visit dashboard_path
+
+        expect(page).to have_content("Your orders have quantities exceeding your inventory of:\n#{@item_1.name}")
+      end
+
+      it 'should NOT warn me if multiple orders DO NOT have an item exceeding my inventory of that item' do
+        @order_item_1.update(quantity: 1)
+        @order_item_2.update(quantity: 1)
+        @order_item_1.reload
+        @order_item_2.reload
+        @order_item_5 = OrderItem.create!(item: @item_1, order: @order_2, quantity: 2, price: 1.99, fulfilled: false)
+        visit dashboard_path
+
+        expect(page).to_not have_content("Your orders have quantities exceeding your inventory of:\n#{@item_1.name}")
       end
     end
   end

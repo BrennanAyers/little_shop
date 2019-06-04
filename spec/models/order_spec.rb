@@ -108,6 +108,32 @@ RSpec.describe Order, type: :model do
       order_1.reload
       expect(order_1.status).to eq("packaged")
     end
+
+    it '#exceeds_inventory?' do
+      merchant = create(:user, role: 1)
+      item_1 = create(:item, user: merchant, inventory: 12, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
+      item_2 = create(:item, user: merchant, inventory: 12, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
+      item_3 = create(:item, user: merchant, inventory: 12, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
+      item_4 = create(:item, user: merchant, inventory: 12, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
+
+      user_1 = create(:user)
+      user_2 = create(:user)
+      user_3 = create(:user)
+      order_1 = create(:order, user: user_1, status: 1)
+      order_2 = create(:order, user: user_2, status: 1)
+      order_3 = create(:order, user: user_3, status: 0)
+      order_4 = create(:order, user: user_3, status: 0)
+      order_item_1 = OrderItem.create!(item: item_1, order: order_1, quantity: 6, price: 1.99, fulfilled: false)
+      order_item_2 = OrderItem.create!(item: item_2, order: order_2, quantity: 32, price: 1.99, fulfilled: false)
+      order_item_3 = OrderItem.create!(item: item_3, order: order_3, quantity: 19, price: 1.99, fulfilled: false)
+      order_item_4 = OrderItem.create!(item: item_3, order: order_4, quantity: 1, price: 1.99, fulfilled: false)
+
+      expect(order_1.exceeds_inventory?).to eq(false)
+      expect(order_2.exceeds_inventory?).to eq(true)
+      # These two are cancelled so would not ever be called on
+      expect(order_3.exceeds_inventory?).to eq(true)
+      expect(order_4.exceeds_inventory?).to eq(false)
+    end
   end
 
   describe 'class methods' do

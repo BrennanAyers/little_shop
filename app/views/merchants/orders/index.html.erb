@@ -134,11 +134,25 @@
   <%= link_to "Downgrade to User", admin_merchant_edit_path({id: @user.id, request: :downgrade_to_user}), :method => :patch, class:"btn btn-primary" %>
 <% end %>
 
+<% if current_merchant? %>
+  <% if @items_exceeding_inventory.any? %>
+    <p>Your orders have quantities exceeding your inventory of: </p>
+    <ol>
+      <% @items_exceeding_inventory.each do |item| %>
+        <li><%= item.name %></li>
+      <% end %>
+    </ol>
+  <% end %>
+<% end %>
+
 <% @orders.each do |order| %>
 <section id="order-<%= order.id %>">
   <p>Order id: <%= link_to "#{order.id}", dashboard_order_path(order.id) %>
   <p>Date created: <%= order.date_made %></p>
   <p>Total quantity: <%= order.item_count %></p>
   <p>Total price: <%= order.grand_total %></p>
+  <% if order.exceeds_inventory? %>
+    <p>This order has an item that exceeds your current inventory!</p>
+  <% end %>
 </section>
 <% end %>

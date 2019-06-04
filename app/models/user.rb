@@ -111,6 +111,13 @@ class User < ApplicationRecord
                   .sum("order_items.quantity * order_items.price")
   end
 
+  def items_exceeding_inventory
+    items.joins(:orders)
+         .where("orders.status = 1")
+         .having("items.inventory < sum(order_items.quantity)")
+         .group(:id)
+  end
+
   ## END EXTENSIONS
 
   def self.top_3_merchants_by_sales
