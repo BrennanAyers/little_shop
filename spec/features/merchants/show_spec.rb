@@ -165,6 +165,17 @@ RSpec.describe 'Merchant show page', type: :feature do
           expect(page).to have_content("This order has an item that exceeds your current inventory!")
         end
       end
+
+      it 'should warn me if multiple orders have an item exceeding my inventory of that item' do
+        @order_item_1.update(quantity: 7)
+        @order_item_2.update(quantity: 2)
+        @order_item_1.reload
+        @order_item_2.reload
+        @order_item_5 = OrderItem.create!(item: @item_1, order: @order_2, quantity: 7, price: 1.99, fulfilled: false)
+        visit dashboard_path
+
+        expect(page).to have_content("Your orders have quantities exceeding your inventory of:\n#{@item_1.name}")
+      end
     end
   end
 end
