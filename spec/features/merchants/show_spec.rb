@@ -79,10 +79,10 @@ RSpec.describe 'Merchant show page', type: :feature do
     describe 'To Do List' do
       before :each do
         @merchant = create(:user, role: 1)
-        @item_1 = create(:item, user: @merchant, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
-        @item_2 = create(:item, user: @merchant, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
-        @item_3 = create(:item, user: @merchant, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
-        @item_4 = create(:item, user: @merchant, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
+        @item_1 = create(:item, user: @merchant, inventory: 12, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
+        @item_2 = create(:item, user: @merchant, inventory: 12, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
+        @item_3 = create(:item, user: @merchant, inventory: 12, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
+        @item_4 = create(:item, user: @merchant, inventory: 12, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
 
         @user_1 = create(:user)
         @user_2 = create(:user)
