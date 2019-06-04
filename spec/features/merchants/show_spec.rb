@@ -153,6 +153,18 @@ RSpec.describe 'Merchant show page', type: :feature do
           expect(page).to_not have_content("You have #{@merchant.unfulfilled_items.count} unfulfilled orders worth #{number_to_currency((@order_item_2.price * @order_item_2.quantity) + (@order_item_1.price * @order_item_1.quantity) + (@order_item_5.price * @order_item_5.quantity))}")
         end
       end
+
+      it 'should warn me whenever an individual order has an item exceeding my inventory of that item' do
+        visit dashboard_path
+
+        within("#section-#{@order}") do
+          expect(page).to_not have_content("This order has an item that exceeds your current inventory!")
+        end
+
+        within("#section-#{@order}") do
+          expect(page).to have_content("This order has an item that exceeds your current inventory!")
+        end
+      end
     end
   end
 end
