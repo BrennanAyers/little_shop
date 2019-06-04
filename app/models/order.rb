@@ -25,12 +25,16 @@ class Order < ApplicationRecord
     end
   end
 
+  def exceeds_inventory?
+    items.joins(:order_items).where("order_items.order_id = #{self.id} AND order_items.fulfilled = false AND order_items.quantity > items.inventory").any?
+  end
+
   def check_fulfillments
     if order_items.all? {|order_item| order_item.fulfilled}
       update(status: :packaged)
     end
   end
-  
+
   def self.biggest_3
     self.joins(:items)
         .select('count(items.id), orders.*')
