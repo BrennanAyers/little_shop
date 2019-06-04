@@ -44,7 +44,7 @@ RSpec.describe 'User show page', type: :feature do
       it 'I see a link to delete my Home address' do
         visit profile_path
 
-        expect(page).to have_link("Delete #{@user.addresses.first.nickname} Address", href: address_path)
+        expect(page).to have_link("Delete #{@user.addresses.first.nickname} Address", href: address_path(@user.addresses.first))
       end
 
       describe 'And I have orders placed in the system' do
