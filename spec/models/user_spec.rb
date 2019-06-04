@@ -231,10 +231,10 @@ RSpec.describe User, type: :model do
       @order_2 = create(:order, user: @user_2, status: 1)
       @order_3 = create(:order, user: @user_3, status: 0)
       @order_4 = create(:order, user: @user_3, status: 0)
-      OrderItem.create!(item: @item_1, order: @order_1, quantity: 12, price: 1.99, fulfilled: false)
-      OrderItem.create!(item: @item_2, order: @order_2, quantity: 12, price: 1.99, fulfilled: false)
-      OrderItem.create!(item: @item_3, order: @order_3, quantity: 12, price: 1.99, fulfilled: false)
-      OrderItem.create!(item: @item_3, order: @order_4, quantity: 12, price: 1.99, fulfilled: false)
+      @order_item_1 = OrderItem.create!(item: @item_1, order: @order_1, quantity: 12, price: 1.99, fulfilled: false)
+      @order_item_2 = OrderItem.create!(item: @item_2, order: @order_2, quantity: 12, price: 1.99, fulfilled: false)
+      @order_item_3 = OrderItem.create!(item: @item_3, order: @order_3, quantity: 12, price: 1.99, fulfilled: false)
+      @order_item_4 = OrderItem.create!(item: @item_3, order: @order_4, quantity: 12, price: 1.99, fulfilled: false)
 
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
     end
@@ -243,6 +243,26 @@ RSpec.describe User, type: :model do
       orders = [@order_1, @order_2]
 
       expect(@merchant.pending_orders).to eq(orders)
+    end
+
+    it '#placeholder_image_items' do
+      expect(@merchant.placeholder_image_items.count).to eq(4)
+      expect(@merchant.placeholder_image_items.first).to eq(@item_1)
+      expect(@merchant.placeholder_image_items.second).to eq(@item_2)
+      expect(@merchant.placeholder_image_items.third).to eq(@item_3)
+      expect(@merchant.placeholder_image_items.fourth).to eq(@item_4)
+    end
+
+    it '#unfulfilled_items' do
+      # only includes pending orders items, cancelled omitted
+      # Impossible to expect specific items, because they're joined Orders with OrderItem attributes
+      expect(@merchant.unfulfilled_items.count).to eq(2)
+    end
+
+    it '#unfulfilled_items_cost' do
+      # only includes pending orders items, cancelled omitted
+      # require "pry"; binding.pry
+      expect(@merchant.unfulfilled_items_cost).to eq((@order_item_1.price * @order_item_1.quantity) + (@order_item_2.price * @order_item_2.quantity))
     end
   end
 
@@ -340,14 +360,6 @@ RSpec.describe User, type: :model do
       expect(@merchant.top_users[0].name).to eq(@user_3.name)
       expect(@merchant.top_users[1].name).to eq(@user_4.name)
       expect(@merchant.top_users[2].name).to eq(@user_5.name)
-    end
-
-    it '#placeholder_image_items' do
-      expect(@merchant.placeholder_image_items.count).to eq(4)
-      expect(@merchant.placeholder_image_items.first).to eq(@item_1)
-      expect(@merchant.placeholder_image_items.second).to eq(@item_2)
-      expect(@merchant.placeholder_image_items.third).to eq(@item_3)
-      expect(@merchant.placeholder_image_items.fourth).to eq(@item_4)
     end
   end
 end
