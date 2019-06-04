@@ -140,5 +140,8 @@
   <p>Date created: <%= order.date_made %></p>
   <p>Total quantity: <%= order.item_count %></p>
   <p>Total price: <%= order.grand_total %></p>
+  <% if order.exceeds_inventory? %>
+    <p>This order has an item that exceeds your current inventory!</p>
+  <% end %>
 </section>
 <% end %>
