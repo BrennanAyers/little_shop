@@ -157,11 +157,11 @@ RSpec.describe 'Merchant show page', type: :feature do
       it 'should warn me whenever an individual order has an item exceeding my inventory of that item' do
         visit dashboard_path
 
-        within("#section-#{@order}") do
+        within("#order-#{@order_1.id}") do
           expect(page).to_not have_content("This order has an item that exceeds your current inventory!")
         end
 
-        within("#section-#{@order}") do
+        within("#order-#{@order_2.id}") do
           expect(page).to have_content("This order has an item that exceeds your current inventory!")
         end
       end
