@@ -23,10 +23,6 @@ RSpec.describe 'As a registered User', type: :feature do
         expect(page).to have_field("Name")
         expect(page).to have_field("Password")
         expect(page).to have_field("Confirm Password")
-        expect(page).to have_field("Address")
-        expect(page).to have_field("City")
-        expect(page).to have_field("State")
-        expect(page).to have_field("Zip")
         expect(page).to have_field("Email")
 
         expect(page).to have_button("Edit User")
@@ -38,10 +34,6 @@ RSpec.describe 'As a registered User', type: :feature do
         expect(page).to have_field("Name", with: "Testy McTesterson")
         expect(find_field("Password").value).blank?
         expect(find_field("Confirm Password").value).blank?
-        expect(page).to have_field("Address", with: "123 Test St")
-        expect(page).to have_field("City", with: "Testville")
-        expect(page).to have_field("State", with: "Test")
-        expect(page).to have_field("Zip", with: "01234")
         expect(page).to have_field("Email", with: "test@test.com")
       end
 
@@ -64,10 +56,6 @@ RSpec.describe 'As a registered User', type: :feature do
         visit profile_edit_path
 
         fill_in "Name", with: "Testerino"
-        fill_in "Address", with: "455 Test Ave"
-        fill_in "City", with: "Testopolis"
-        fill_in "State", with: "Testafornia"
-        fill_in "Zip", with: "54321"
         fill_in "Email", with: "test@test.net"
 
         click_button "Edit User"
@@ -76,10 +64,6 @@ RSpec.describe 'As a registered User', type: :feature do
 
         expect(page).to have_content("Your information has been updated!")
         expect(page).to have_content("Testerino")
-        expect(page).to have_content("455 Test Ave")
-        expect(page).to have_content("Testopolis")
-        expect(page).to have_content("Testafornia")
-        expect(page).to have_content("54321")
         expect(page).to have_content("test@test.net")
 
         expect(@user.password_digest).to eq("t3s7")
