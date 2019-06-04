@@ -5,7 +5,8 @@ RSpec.describe 'New user form' do
     describe 'When I visit the register new register link' do
 
       before :each do
-        @user_1 = User.create!(name: "default_user", role: 0, active: true, password_digest: "8320280282", address: "333", city: "Denver", state: "CO", zip: "80000", email: "default_user@gmail.com" )
+        @user_1 = User.create!(name: "default_user", role: 0, active: true, password_digest: "8320280282", email: "default_user@gmail.com" )
+        @user_1.addresses << create(:address, user: @user_1, address: "333", city: "Denver", state: "CO", zip: "80000")
       end
 
       it 'I can register as a new user' do
@@ -29,9 +30,9 @@ RSpec.describe 'New user form' do
         expect(current_path).to eq("/profile")
 
         expect(page).to have_content("#{new_user.name}")
-        expect(page).to have_content("Address: #{new_user.address}")
-        expect(page).to have_content("City: #{new_user.city}")
-        expect(page).to have_content("Zip Code: #{new_user.zip}")
+        expect(page).to have_content("Address: #{new_user.addresses.first.address}")
+        expect(page).to have_content("City: #{new_user.addresses.first.city}")
+        expect(page).to have_content("Zip Code: #{new_user.addresses.first.zip}")
         expect(page).to have_content("Email: #{new_user.email}")
         expect(page).to have_content("You are now registered and logged in.")
       end
@@ -59,7 +60,8 @@ RSpec.describe 'New user form' do
 
 
       it 'Can not use an already used email address' do
-        user_2 = User.create!(name: "User_1", role: 0, active: true, password_digest: "8320280282", address: "333", city: "Denver", zip: "80000", email: "user_1@gmail.com", state: 'IL' )
+        user_2 = User.create!(name: "User_1", role: 0, active: true, password_digest: "8320280282", email: "user_1@gmail.com" )
+        user_2.addresses << create(:address, user: user_2, address:"333", city: "Denver", zip: "80000", state: 'IL')
 
         visit register_path
 
