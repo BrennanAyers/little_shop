@@ -12,5 +12,6 @@ class Merchants::OrdersController < Merchants::BaseController
     @placeholder_image_items = @user.placeholder_image_items
     @unfulfilled_items = @user.unfulfilled_items
     @unfulfilled_items_cost = @user.unfulfilled_items_cost
+    @items_exceeding_inventory = @user.items_exceeding_inventory
   end
 end
