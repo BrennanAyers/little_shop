@@ -354,6 +354,34 @@ describe 'As a registered user' do
       expect(page).to have_content("Your Order Was Created")
     end
 
+    it 'does not allow me to checkout without an address' do
+      visit profile_path
+      click_link "Delete Home"
+      visit carts_path
+
+      expect(page).to have_content("You need to add an address to check out!")
+      click_link "Checkout with New Address"
+
+      fill_in "Nickname", with: "Away"
+      fill_in "Address", with: "666 Fire Rd"
+      fill_in "City", with: "Newark"
+      fill_in "State", with: "Joisey"
+      fill_in "Zip", with: "96669"
+
+      click_button "Create Address"
+
+      away = @user.addresses.first
+
+      visit carts_path
+
+      click_link 'Checkout with Away'
+      order = Order.last
+      expect(order.status).to eq("pending")
+      expect(order.address).to eq(away)
+      expect(current_path).to eq(profile_orders_path)
+      expect(page).to have_content("Your Order Was Created")
+    end
+
     it 'shows my order on my orders page' do
       visit carts_path
 
