@@ -327,11 +327,11 @@ describe 'As a registered user' do
         click_link "Add To Cart"
         click_link "Add To Cart"
       end
-
-      visit carts_path
     end
 
-    it 'allows me to checkout' do
+    it 'allows me to checkout with home' do
+      visit carts_path
+
       click_link 'Checkout with Home'
       order = Order.last
       expect(order.status).to eq("pending")
@@ -340,7 +340,23 @@ describe 'As a registered user' do
       expect(page).to have_content("Your Order Was Created")
     end
 
+    it 'allows me to checkout with work' do
+      create(:address, address: "123 ugh Lane", city: "Helpen", state: "Sad", zip: "00000", user: @user, nickname: "Work")
+      @user.reload
+      work = @user.addresses.last
+      visit carts_path
+
+      click_link 'Checkout with Work'
+      order = Order.last
+      expect(order.status).to eq("pending")
+      expect(order.address).to eq(work)
+      expect(current_path).to eq(profile_orders_path)
+      expect(page).to have_content("Your Order Was Created")
+    end
+
     it 'shows my order on my orders page' do
+      visit carts_path
+
       click_link 'Checkout with Home'
       order = Order.last
       within "#order-#{order.id}" do
@@ -349,6 +365,8 @@ describe 'As a registered user' do
     end
 
     it 'clears my cart' do
+      visit carts_path
+
       click_link 'Checkout with Home'
       within '#navbarNav' do
         expect(page).to have_content("(0)")
