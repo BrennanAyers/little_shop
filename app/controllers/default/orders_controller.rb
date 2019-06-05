@@ -22,10 +22,11 @@ class Default::OrdersController < Default::BaseController
 
   def create
     cart = Cart.new(session[:cart])
+    address_id = params[:address_id]
     if cart.contents.empty?
       carts_path
     else
-      cart.create_order(current_user.id)
+      cart.create_order(address_id)
       session[:cart] = {}
       flash.notice = "Your Order Was Created"
       redirect_to profile_orders_path
