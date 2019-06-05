@@ -12,10 +12,15 @@ class Default::OrdersController < Default::BaseController
 
   def edit
     @order = Order.find(params[:id])
+    @user = User.find(@order.address.user_id)
+    @other_addresses = @user.addresses - [@order.address]
   end
 
   def update
-
+    @order = Order.find(params[:id])
+    changed_address = Address.find(params[:address_id])
+    @order.update(address: changed_address)
+    redirect_to profile_order_path(@order)
   end
 
   def destroy
