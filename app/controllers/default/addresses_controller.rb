@@ -5,7 +5,15 @@ class Default::AddressesController < ApplicationController
   end
 
   def create
-    # require "pry"; binding.pry
+    @user = current_user
+    @address = Address.new(address_params)
+    @address.update(user: @user)
+    if @address.save!
+      flash[:notice] = "Address #{@address.nickname} has been saved!"
+      redirect_to profile_path
+    else
+      render :new
+    end
   end
 
   def edit
