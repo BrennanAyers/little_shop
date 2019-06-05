@@ -4,7 +4,7 @@ RSpec.describe Order, type: :model do
   include ActiveSupport::Testing::TimeHelpers
 
   describe 'relationships' do
-    it { should belong_to :user }
+    it { should belong_to :address }
     it { should have_many :items}
   end
 
@@ -14,7 +14,9 @@ RSpec.describe Order, type: :model do
 
   describe 'instance methods' do
     before :each do
-      @user = User.create!(email: "test@test.com", password_digest: "t3s7", role: 1, active: true, name: "Testy McTesterson", address: "123 Test St", city: "Testville", state: "Test", zip: "01234")
+      @user = User.create!(email: "test@test.com", password_digest: "t3s7", role: 1, active: true, name: "Testy McTesterson")
+      @user.addresses.create(address: "123 Test St", city: "Testville", state: "Test", zip: "01234")
+      @address = @user.addresses.first
       @merchant_1 = create(:user)
       @merchant_2 = create(:user)
       @item_1 = create(:item, user: @merchant_1)
@@ -24,13 +26,13 @@ RSpec.describe Order, type: :model do
       @item_5 = create(:item, user: @merchant_2)
       @item_6 = create(:item, user: @merchant_2)
       travel_to Time.zone.local(2019, 04, 11, 8, 00, 00)
-      @order_1 = create(:order, user: @user)
+      @order_1 = create(:order, address: @address)
       travel_to Time.zone.local(2019, 05, 10, 18, 00, 00)
-      @order_2 = create(:order, user: @user)
+      @order_2 = create(:order, address: @address)
       travel_to Time.zone.local(2019, 05, 02, 12, 00, 00)
-      @order_3 = create(:order, user: @user)
+      @order_3 = create(:order, address: @address)
       travel_to Time.zone.local(2018, 01, 15, 14, 00, 00)
-      @order_4 = create(:order, user: @user)
+      @order_4 = create(:order, address: @address)
       travel_back
       order_item_1 = create(:order_item, order: @order_1, item: @item_1)
       order_item_2 = create(:order_item, order: @order_1, item: @item_2)
@@ -83,12 +85,14 @@ RSpec.describe Order, type: :model do
     end
 
     it '#check_fulfillments' do
-      user = User.create!(email: "not_test@test.com", password_digest: "t3s7", role: 1, active: true, name: "Testy McTesterson", address: "123 Test St", city: "Testville", state: "Test", zip: "01234")
+      user = User.create!(email: "nottest@test.com", password_digest: "t3s7", role: 1, active: true, name: "Testy McTesterson")
+      user.addresses.create(address: "123 Test St", city: "Testville", state: "Test", zip: "01234")
+      address = user.addresses.first
       merchant_1 = create(:user)
       item_1 = create(:item, user: merchant_1)
       item_2 = create(:item, user: merchant_1)
       item_3 = create(:item, user: merchant_1)
-      order_1 = create(:order, user: user, status: :pending)
+      order_1 = create(:order, address: address, status: :pending)
       order_item_1 = create(:order_item, order: order_1, item: item_1)
       order_item_2 = create(:order_item, order: order_1, item: item_2)
       order_item_3 = create(:order_item, order: order_1, item: item_3)
@@ -117,12 +121,15 @@ RSpec.describe Order, type: :model do
       item_4 = create(:item, user: merchant, inventory: 12, image: "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055")
 
       user_1 = create(:user)
+      address_1 = create(:address, user: user_1)
       user_2 = create(:user)
+      address_2 = create(:address, user: user_2)
       user_3 = create(:user)
-      order_1 = create(:order, user: user_1, status: 1)
-      order_2 = create(:order, user: user_2, status: 1)
-      order_3 = create(:order, user: user_3, status: 0)
-      order_4 = create(:order, user: user_3, status: 0)
+      address_3 = create(:address, user: user_3)
+      order_1 = create(:order, address: address_1, status: 1)
+      order_2 = create(:order, address: address_2, status: 1)
+      order_3 = create(:order, address: address_3, status: 0)
+      order_4 = create(:order, address: address_3, status: 0)
       order_item_1 = OrderItem.create!(item: item_1, order: order_1, quantity: 6, price: 1.99, fulfilled: false)
       order_item_2 = OrderItem.create!(item: item_2, order: order_2, quantity: 32, price: 1.99, fulfilled: false)
       order_item_3 = OrderItem.create!(item: item_3, order: order_3, quantity: 19, price: 1.99, fulfilled: false)
@@ -139,24 +146,29 @@ RSpec.describe Order, type: :model do
   describe 'class methods' do
 
     before :each do
-      @merchant_1 = create(:user, role: 1, created_at: Date.new(1995, 5, 3), city: 'Kansas City', state: "MO")
-      @merchant_2 = create(:user, role: 1, created_at: Date.new(2015, 12, 8), city: 'Springfield', state: 'CO')
-      @merchant_3 = create(:user, role: 1, created_at: Date.new(2002, 9, 10), city: 'Springfield', state: 'MI')
-      @merchant_4 = create(:user, role: 1, created_at: Date.new(1955, 3, 21), city: 'Little Rock', state: 'AR')
+      @merchant_1 = create(:user, role: 1, created_at: Date.new(1995, 5, 3))
+      create(:address, city: 'Kansas City', state: "MO", user: @merchant_1)
+      @merchant_2 = create(:user, role: 1, created_at: Date.new(2015, 12, 8))
+      create(:address, city: 'Springfield', state: 'CO', user: @merchant_2)
+      @merchant_3 = create(:user, role: 1, created_at: Date.new(2002, 9, 10))
+      create(:address, city: 'Springfield', state: 'MI', user: @merchant_3)
+      @merchant_4 = create(:user, role: 1, created_at: Date.new(1955, 3, 21))
+      create(:address, city: 'Little Rock', state: 'AR', user: @merchant_4)
       @merchant_5 = create(:user, role: 1, active: false)
       @merchant_6 = create(:user, role: 1, active: false)
       user = create(:user)
+      address = create(:address, user: user)
       item_1 = create(:item, user: @merchant_1)
       item_2 = create(:item, user: @merchant_2)
       item_3 = create(:item, user: @merchant_3)
       item_4 = create(:item, user: @merchant_4)
       item_5 = create(:item, user: @merchant_1)
       item_6 = create(:item, user: @merchant_5)
-      @order_1 = create(:order, user: user, status: 2)
-      @order_2 = create(:order, user: user, status: 2)
-      @order_3 = create(:order, user: user, status: 2)
-      @order_4 = create(:order, user: user, status: 2)
-      @order_5 = create(:order, user: user, status: 1)
+      @order_1 = create(:order, address: address, status: 2)
+      @order_2 = create(:order, address: address, status: 2)
+      @order_3 = create(:order, address: address, status: 2)
+      @order_4 = create(:order, address: address, status: 2)
+      @order_5 = create(:order, address: address, status: 1)
       order_item_1 = OrderItem.create!(item: item_1, order: @order_1, quantity: 1, price: item_1.price, fulfilled: false, updated_at: Time.now + 30)
       order_item_2 = OrderItem.create!(item: item_2, order: @order_1, quantity: 2, price: item_2.price, fulfilled: false, updated_at: Time.now + 40)
       order_item_3 = OrderItem.create!(item: item_3, order: @order_1, quantity: 3, price: item_3.price, fulfilled: false, updated_at: Time.now + 50)
