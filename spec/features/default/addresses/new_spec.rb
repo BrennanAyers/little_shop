@@ -46,11 +46,11 @@ RSpec.describe 'As a Default User', type: :feature do
       expect(current_path).to eq(profile_path)
 
       expect(page).to have_content "Address Nickname: Away"
-      expect(page).to have_content "Address : 666 Fire Rd"
+      expect(page).to have_content "Address: 666 Fire Rd"
       expect(page).to have_content "City: Newark"
       expect(page).to have_content "State: Joisey"
       expect(page).to have_content "Zip Code: 96669"
-      expect(page).to have_button "Delete Away Address"
+      expect(page).to have_link "Delete Away Address"
     end
   end
 end
