@@ -51,6 +51,13 @@
   </tbody>
 </table>
 <% if !current_user.nil? && !current_admin? && !current_merchant? %>
-  <h5 class='text-center'><%= link_to "Checkout", profile_orders_path, method: :post, style:"font-size:35px;" %></h5>
+  <% if @user.addresses.length > 0 %>
+    <% @user.addresses.each do |address| %>
+      <h5 class='text-center'><%= link_to "Checkout with #{address.nickname}", profile_orders_path(address_id: address.id), method: :post, style:"font-size:35px;" %></h5>
+    <% end %>
+  <% else %>
+      <p>You need to add an address to check out!</p>
+      <h5 class='text-center'><%= link_to "Checkout with New Address", new_profile_address_path, style:"font-size:35px;" %></h5>
+  <% end %>
 <% end %>
 <h5 class='text-center'><%= link_to "Clear Cart", carts_path, method: :delete %></h5>

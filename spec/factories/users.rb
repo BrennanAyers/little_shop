@@ -8,11 +8,6 @@ FactoryBot.define do
       "User #{n}"
     end
 
-    address { "1234 Test Rd." }
-    city { "Denver" }
-    state { "CO" }
-    zip { "80123" }
-
     sequence :email do |n|
       "person#{n}@example.com"
     end

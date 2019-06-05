@@ -5,7 +5,9 @@ RSpec.describe 'As a Registered User', type: :feature do
 
   describe 'When I visit of my Orders show pages' do
     before :each do
-      @user = User.create!(email: "test@test.com", password_digest: "t3s7", role: 0, active: true, name: "Testy McTesterson", address: "123 Test St", city: "Testville", state: "Test", zip: "01234")
+      @user = User.create!(email: "test@test.com", password: "t3s7", role: 0, active: true, name: "Testy McTesterson")
+      create(:address, address: "123 Test St", city: "Testville", state: "Testington", zip: "01234", user: @user)
+      @address = @user.addresses.first
 
       @merchant_1 = create(:user)
       @merchant_2 = create(:user)
@@ -15,7 +17,7 @@ RSpec.describe 'As a Registered User', type: :feature do
       @item_3 = create(:item, user: @merchant_2)
 
       travel_to Time.zone.local(2019, 04, 11, 8, 00, 00)
-      @order_1 = create(:order, user: @user)
+      @order_1 = create(:order, address: @address)
       travel_to Time.zone.local(2019, 04, 12, 8, 00, 00)
       @order_1.update(status: 2)
       travel_back
@@ -24,7 +26,10 @@ RSpec.describe 'As a Registered User', type: :feature do
       @order_item_2 = create(:order_item, order: @order_1, item: @item_2)
       @order_item_3 = create(:order_item, order: @order_1, item: @item_3)
 
-      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
+      visit login_path
+      fill_in "Email", with: @user.email
+      fill_in "Password", with: @user.password
+      click_button "Login"
     end
 
     it 'Has all the information for the Order' do
@@ -94,6 +99,40 @@ RSpec.describe 'As a Registered User', type: :feature do
       within("#order-#{@order_1.id}") do
         expect(page).to have_content("Current Status: Cancelled")
       end
+    end
+
+    it 'I can change the address on the order if it is still pending and I have multiple addresses' do
+      create(:address, nickname: "Away", address: "666 Fire Rd", city: "Newark", state: "Joisey", zip: "96669", user: @user)
+      @user.reload
+      @address_2 = @user.addresses.last
+      @order_1.update!(status: :pending)
+      @item_2.update!(inventory: 3)
+      @order_item_2.update!(fulfilled: true)
+      @item_2.reload
+      @order_item_2.reload
+      expect(@item_2.inventory).to eq(2)
+
+      visit profile_order_path(@order_1)
+
+      expect(page).to have_content("Shipping To: Home Address")
+      expect(page).to have_content("Current Status: Pending")
+      expect(page).to have_button("Change Shipping Address")
+
+      click_button "Change Shipping Address"
+      expect(current_path).to eq(edit_profile_order_path(@order_1))
+
+      expect(page).to have_content "Address Nickname: Away"
+      expect(page).to have_content "Address: 666 Fire Rd"
+      expect(page).to have_content "City: Newark"
+      expect(page).to have_content "State: Joisey"
+      expect(page).to have_content "Zip Code: 96669"
+      expect(page).to have_button "Change Shipping to Away Address"
+
+      click_button "Change Shipping to Away Address"
+      expect(current_path).to eq(profile_order_path(@order_1))
+
+      expect(page).to have_content("Shipping To: Away Address")
+      expect(page).to have_content("Current Status: Pending")
     end
 
     it 'Should have a disabled cancel button if the order is not pending' do
