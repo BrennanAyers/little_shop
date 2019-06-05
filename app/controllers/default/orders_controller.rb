@@ -7,6 +7,15 @@ class Default::OrdersController < Default::BaseController
   def show
     @order = Order.find(params[:id])
     @order_items = @order.order_items
+    @user = User.find(@order.address.user_id)
+  end
+
+  def edit
+    @order = Order.find(params[:id])
+  end
+
+  def update
+
   end
 
   def destroy
