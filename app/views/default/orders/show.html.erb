@@ -4,6 +4,8 @@
 <p>Last Updated: <%= @order.last_updated %></p>
 <p>Current Status: <%= @order.status.capitalize %></p>
 
+<p>Shipping To: <%= @order.address.nickname %> Address</p>
+
 <% @order_items.each do |order_item| %>
   <section id="order-item-<%= order_item.id %>">
     <% item = order_item.item %>
@@ -18,6 +20,10 @@
 <p>Number of Items: <%= @order.item_count %></p>
 <p>Grand Total: <%= number_to_currency(@order.grand_total, unit: "$") %></p>
 
+<%= button_to "Change Shipping Address", edit_profile_order_path(@order), method: :get, disabled: @user.addresses.length <= 1 %>
+<% if @user.addresses.length <= 1 %>
+  <p>You need another address to be able to change them!</p>
+<% end %>
 
 <%= button_to "Cancel Order", profile_order_path(@order), method: "delete", disabled: !@order.pending? %>
 <% if !@order.pending? %>
