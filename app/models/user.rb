@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   has_many :items
   has_many :orders
+  has_many :orders, through: :addresses
   has_many :addresses
   accepts_nested_attributes_for :addresses
 
