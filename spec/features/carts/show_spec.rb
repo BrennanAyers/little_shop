@@ -362,6 +362,8 @@ describe 'As a registered user' do
       expect(page).to have_content("You need to add an address to check out!")
       click_link "Checkout with New Address"
 
+      expect(current_path).to eq(new_profile_address_path)
+
       fill_in "Nickname", with: "Away"
       fill_in "Address", with: "666 Fire Rd"
       fill_in "City", with: "Newark"
