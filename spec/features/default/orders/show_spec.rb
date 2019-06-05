@@ -129,7 +129,7 @@ RSpec.describe 'As a Registered User', type: :feature do
       expect(page).to have_button "Change Shipping to Away Address"
 
       click_button "Change Shipping to Away Address"
-      expect(path).to eq(profile_order_path(@order_1))
+      expect(current_path).to eq(profile_order_path(@order_1))
 
       expect(page).to have_content("Shipping To: Away Address")
       expect(page).to have_content("Current Status: Pending")
