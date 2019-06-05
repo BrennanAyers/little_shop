@@ -42,5 +42,13 @@ RSpec.describe 'As a Default user', type: :feature do
         expect(page).to have_content("Zip Code: 96669")
       end
     end
+    
+    it 'I can not edit an address if its been used in an order' do
+      create(:order, status: 2, address: @address)
+      @address.reload
+      visit profile_path
+
+      expect(page).to_not have_link(@address.nickname, href: edit_profile_address_path(@address))
+    end
   end
 end

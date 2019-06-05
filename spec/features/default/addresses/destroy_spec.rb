@@ -31,5 +31,13 @@ RSpec.describe 'As a Default User', type: :feature do
       expect(page).to_not have_content(@address.state)
       expect(page).to_not have_content(@address.zip)
     end
+
+    it 'I can not delete an address if its been used in an order' do
+      create(:order, status: 2, address: @address)
+      @address.reload
+      visit profile_path
+
+      expect(page).to_not have_link("Delete #{@address.nickname} Address", href: profile_address_path(@address))
+    end
   end
 end
