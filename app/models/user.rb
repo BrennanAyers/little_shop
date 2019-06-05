@@ -1,8 +1,10 @@
 class User < ApplicationRecord
   has_many :items
   has_many :orders
+  has_many :addresses
+  accepts_nested_attributes_for :addresses
 
-  validates_presence_of :password_digest, :name, :address, :city, :state, :zip
+  validates_presence_of :password_digest, :name
 
   validates :email, presence: true, uniqueness: true
 
