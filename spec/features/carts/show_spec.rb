@@ -139,20 +139,24 @@ RSpec.describe 'As a visitor' do
       @item_5 = create(:item, user: merchant_2, active: false)
       @item_6 = create(:item, user: merchant_2, active: false)
       buyer_1 = create(:user)
+      create(:address, address: "123 ugh Lane", city: "Helpen", state: "Sad", zip: "00000", user: buyer_1)
       buyer_2 = create(:user)
+      create(:address, address: "123 ugh Lane", city: "Helpen", state: "Sad", zip: "00000", user: buyer_2)
       buyer_3 = create(:user)
+      create(:address, address: "123 ugh Lane", city: "Helpen", state: "Sad", zip: "00000", user: buyer_3)
       buyer_4 = create(:user)
-      order_1 = create(:order, user: buyer_1)
-      order_2 = create(:order, user: buyer_1)
-      order_3 = create(:order, user: buyer_2)
-      order_4 = create(:order, user: buyer_2)
-      order_5 = create(:order, user: buyer_3)
-      order_6 = create(:order, user: buyer_3)
-      order_7 = create(:order, user: buyer_3)
-      order_8 = create(:order, user: buyer_2)
-      order_9 = create(:order, user: buyer_1)
-      order_10 = create(:order, user: buyer_3)
-      order_11 = create(:order, user: buyer_4)
+      create(:address, address: "123 ugh Lane", city: "Helpen", state: "Sad", zip: "00000", user: buyer_4)
+      order_1 = create(:order, address: buyer_1.addresses.first)
+      order_2 = create(:order, address: buyer_1.addresses.first)
+      order_3 = create(:order, address: buyer_2.addresses.first)
+      order_4 = create(:order, address: buyer_2.addresses.first)
+      order_5 = create(:order, address: buyer_3.addresses.first)
+      order_6 = create(:order, address: buyer_3.addresses.first)
+      order_7 = create(:order, address: buyer_3.addresses.first)
+      order_8 = create(:order, address: buyer_2.addresses.first)
+      order_9 = create(:order, address: buyer_1.addresses.first)
+      order_10 = create(:order, address: buyer_3.addresses.first)
+      order_11 = create(:order, address: buyer_4.addresses.first)
       OrderItem.create!(item: @item_1, order: order_1, quantity: 12, price: 1.99, fulfilled: true)
       OrderItem.create!(item: @item_2, order: order_2, quantity: 3, price: 6.99, fulfilled: true)
       OrderItem.create!(item: @item_3, order: order_3, quantity: 6, price: 11.99, fulfilled: true)
@@ -294,6 +298,7 @@ describe 'As a registered user' do
   describe 'when viewing my cart with items in it' do
     before :each do
       @user = create(:user, password: 'password')
+      create(:address, address: "123 ugh Lane", city: "Helpen", state: "Sad", zip: "00000", user: @user)
       @merchant = create(:user, name: "Merchant", role: 1)
       @item_1 = create(:item, user: @merchant)
       @item_2 = create(:item, user: @merchant)
@@ -326,7 +331,7 @@ describe 'As a registered user' do
     end
 
     it 'allows me to checkout' do
-      click_link 'Checkout'
+      click_link 'Checkout with Home'
       order = Order.last
       expect(order.status).to eq("pending")
       expect(order.user).to eq(@user)
@@ -335,7 +340,7 @@ describe 'As a registered user' do
     end
 
     it 'shows my order on my orders page' do
-      click_link 'Checkout'
+      click_link 'Checkout with Home'
       order = Order.last
       within "#order-#{order.id}" do
         expect(page).to have_link("Order ID: #{order.id}")
@@ -343,7 +348,7 @@ describe 'As a registered user' do
     end
 
     it 'clears my cart' do
-      click_link 'Checkout'
+      click_link 'Checkout with Home'
       within '#navbarNav' do
         expect(page).to have_content("(0)")
       end
