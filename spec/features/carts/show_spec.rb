@@ -299,6 +299,7 @@ describe 'As a registered user' do
     before :each do
       @user = create(:user, password: 'password')
       create(:address, address: "123 ugh Lane", city: "Helpen", state: "Sad", zip: "00000", user: @user)
+      @address = @user.addresses.first
       @merchant = create(:user, name: "Merchant", role: 1)
       @item_1 = create(:item, user: @merchant)
       @item_2 = create(:item, user: @merchant)
@@ -334,7 +335,7 @@ describe 'As a registered user' do
       click_link 'Checkout with Home'
       order = Order.last
       expect(order.status).to eq("pending")
-      expect(order.user).to eq(@user)
+      expect(order.address).to eq(@address)
       expect(current_path).to eq(profile_orders_path)
       expect(page).to have_content("Your Order Was Created")
     end
