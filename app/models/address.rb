@@ -6,6 +6,10 @@ class Address < ApplicationRecord
 
   before_save :set_nickname
 
+  def modifiable?
+    orders.where("status = 0 OR status = 2").empty?
+  end
+
   private
 
   def set_nickname
